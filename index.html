@@ -4,132 +4,144 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>SONY SPORTS 2 LIVE</title>
-<!-- Google Fonts for a sleek look -->
+<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet" />
-<!-- Font Awesome for icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<!-- Video.js CSS -->
+<link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
+
 <style>
-  body {
-    margin: 0; padding: 0;
-    font-family: 'Montserrat', sans-serif;
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+body {
+  margin: 0; padding: 0;
+  font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  align-items: center;
+}
+/* হেডার */
+.header {
+  padding: 30px 20px 10px;
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  background: linear-gradient(90deg, #ffd700, #ff8c00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  width: 100%;
+}
 
-  /* Header Title */
-  .header-title {
-    padding: 30px 20px 10px;
-    text-align: center;
-    font-size: 2.2rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    background: linear-gradient(90deg, #ffd700, #ff8c00);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 2px 12px rgba(0,0,0,0.4);
-  }
+/* ভিডিও কন্টেইনার */
+.video-section {
+  padding: 50px 20px;
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+.video-js {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+}
 
-  /* Video Container */
-  .video-section {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px 20px;
+/* ফুটার নেই, শুধুই হোয়াটসঅ্যাপ ও টেলিগ্রাম আইকন */
+footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.8);
+  padding: 12px 20px;
+  gap: 20px;
+  width: 100%;
+}
+footer a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+  font-size: 1.8em;
+  color: #fff;
+  transition: background 0.3s, transform 0.3s;
+}
+footer a:hover {
+  background: rgba(255,255,255,0.3);
+  transform: scale(1.1);
+}
+@media(max-width: 600px){
+  .header {
+    font-size: 1.7rem;
   }
-  .video-wrapper {
-    width: 100%;
-    max-width: 800px;
-    aspect-ratio: 16 / 9;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-    border-radius: 12px;
-    overflow: hidden;
-    background: #000;
-  }
-  iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-  }
-
-  /* Footer styles */
   footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0,0,0,0.8);
-    padding: 12px 20px;
-    gap: 20px;
-    flex-wrap: wrap;
+    gap: 15px;
   }
-
-  footer span {
-    font-size: 1rem;
-    color: #ffd700;
+  footer a {
+    width: 45px;
+    height: 45px;
+    font-size: 1.6em;
   }
-
-  .icon-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 50%;
-    font-size: 1.8em;
-    color: #fff;
-    transition: background 0.3s, transform 0.3s;
-  }
-  .icon-link:hover {
-    background: rgba(255,255,255,0.3);
-    transform: scale(1.1);
-  }
-
-  /* Responsive adjustments */
-  @media(max-width: 600px){
-    .header-title {
-      font-size: 1.7rem;
-    }
-    footer {
-      justify-content: center;
-    }
-    .icon-link {
-      width: 45px;
-      height: 45px;
-      font-size: 1.6em;
-    }
-  }
+}
 </style>
 </head>
 <body>
 
-<div class="header-title">
+<div class="header">
   LIVE SONY SPORTS 2
 </div>
 
 <div class="video-section">
-  <div class="video-wrapper">
-    <!-- Using your provided link -->
-    <iframe src="https://tvgo.neocities.org/APPTV/jiohd?id=1142&autoplay=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen loading="eager"></iframe>
-  </div>
+  <video
+    id="my-video"
+    class="video-js vjs-default-skin"
+    controls
+    preload="auto"
+    poster="https://via.placeholder.com/900x506/000000/FFFFFF?text=Live+Stream"
+    data-setup='{}'
+  >
+    <source src="https://tataplay.slivcdn.com/hls/live/2020590/TEN2SD/master_1300.m3u8" type="application/x-mpegURL" />
+  </video>
 </div>
 
-<!-- Footer with icons -->
+<!-- ফুটার -->
 <footer>
-  <span>CNP SLIV 2| All Rights Reserved</span>
-  <a href="https://t.me/sayan_xyz" target="_blank" class="icon-link" title="Telegram Channel">
+  <a href="https://t.me/sayan_xyz" target="_blank" title="Telegram Channel">
     <i class="fab fa-telegram-plane"></i>
   </a>
-  <a href="https://whatsapp.com/channel/0029Va9UKhEL7UVN6cfr8a16" target="_blank" class="icon-link" title="WhatsApp Channel">
+  <a href="https://whatsapp.com/channel/0029Va9UKhEL7UVN6cfr8a16" target="_blank" title="WhatsApp Channel">
     <i class="fab fa-whatsapp"></i>
   </a>
-  <img src="https://camo.githubusercontent.com/349509c442090d3702a13dc0ad9dc77c6783d62aaded298e3792edf193f4fca2/68747470733a2f2f6b6f6d617265762e636f6d2f67687076632f3f757365726e616d653d736179616e266c6162656c3d50726f66696c65253230766965777326636f6c6f723d306537356236267374796c653d666c6174" alt="Visitor Counter" style="height:20px; border-radius:4px; margin-left:10px;">
 </footer>
 
+<!-- Video.js JS -->
+<script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
+<script>
+  // ভিডিও প্লেয়ার ইনিশিয়ালাইজ
+  var player = videojs('my-video', {
+    autoplay: true,
+    muted: true,
+    preload: 'auto',
+  });
+  // ডিফল্ট কোয়ালিটি সেট করার অপশন (360p)
+  player.ready(function() {
+    if (player.qualityLevels) {
+      var levels = player.qualityLevels();
+      for (var i=0; i<levels.length; i++) {
+        if (levels[i].width <= 640 && levels[i].height <= 360) {
+          levels.selectedIndex = i;
+          break;
+        }
+      }
+    }
+  });
+</script>
+
 </body>
-    </html>
-      
+</html>
