@@ -34,7 +34,6 @@ body {
   width: 100%;
 }
 
-/* Slightly larger video area (less crop) */
 .video-section {
   width: 100%;
   max-width: 1100px;
@@ -46,7 +45,7 @@ body {
 .video-cropper {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 8;  /* আগের চেয়ে একটু বেশি উচ্চতা, কম crop */
+  aspect-ratio: 16 / 8;
   overflow: hidden;
   border-radius: 18px;
   box-shadow: 0 8px 22px rgba(0,0,0,0.6);
@@ -60,7 +59,7 @@ body {
   top: -6%;
   left: 0;
   width: 100%;
-  height: 112%; /* আগের চেয়ে কম crop */
+  height: 112%;
   object-fit: cover;
   background: #000;
   border-radius: 0;
@@ -76,6 +75,10 @@ footer {
   width: 100%;
   flex-wrap: wrap;
   flex-direction: row;
+  position: relative;
+  min-height: 48px;
+  user-select: none;
+  cursor: pointer;
 }
 footer span {
   font-size: 0.95rem;
@@ -99,9 +102,17 @@ footer span {
   transform: scale(1.1);
 }
 .visitor-counter {
-  display: flex;
+  display: none; /* ডিফল্টে গোপন */
   align-items: center;
   margin-left: 10px;
+}
+.visitor-counter.visible {
+  display: flex !important;
+  animation: growIn .5s;
+}
+@keyframes growIn {
+  from {transform: scale(0.8); opacity: 0;}
+  to {transform: scale(1); opacity: 1;}
 }
 .visitor-counter img {
   height: 24px;
@@ -155,7 +166,7 @@ footer span {
   </div>
 </div>
 
-<footer>
+<footer id="my-footer">
   <span>CNP SLIV 2 | All Rights Reserved</span>
   <a href="https://whatsapp.com/channel/0029Va9UKhEL7UVN6cfr8a16" target="_blank" class="icon-link" title="WhatsApp">
     <i class="fab fa-whatsapp"></i>
@@ -163,7 +174,7 @@ footer span {
   <a href="https://t.me/sayan_xyz" target="_blank" class="icon-link" title="Telegram">
     <i class="fab fa-telegram"></i>
   </a>
-  <span class="visitor-counter">
+  <span class="visitor-counter" id="visitor-counter">
     <img src="https://camo.githubusercontent.com/349509c442090d3702a13dc0ad9dc77c6783d62aaded298e3792edf193f4fca2/68747470733a2f2f6b6f6d617265762e636f6d2f67687076632f3f757365726e616d653d736179616e266c6162656c3d50726f66696c65253230766965777326636f6c6f723d306537356236267374796c653d666c6174" alt="visitor counter">
   </span>
 </footer>
@@ -171,17 +182,17 @@ footer span {
 <!-- Video.js JS -->
 <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
 <script>
-  // Autoplay: Muted + Unmuted try
+  // Video.js config
   var player = videojs('my-video', {
     autoplay: 'any',
-    muted: true, // ব্রাউজারে অটোপ্লের জন্য muted রাখতে হয়
+    muted: true,
     preload: 'auto',
     controlBar: {
       pictureInPictureToggle: true,
     }
   });
 
-  // কোয়ালিটি ৩৬০p
+  // Default 360p set
   function set360p() {
     if (player.qualityLevels) {
       var levels = player.qualityLevels();
@@ -194,20 +205,19 @@ footer span {
     }
   }
 
-  // প্লেয়ার রেডি হলে অটোপ্লে + আনমিউট ট্রাই + ভলিউম
+  // Autoplay + 360p + unmute (if possible)
   player.ready(function() {
     set360p();
 
-    // ব্রাউজার autoplay পলিসির জন্য প্রথমে muted=true রেখে play করাতে হয়
     player.muted(true);
     player.play().then(function() {
-      // প্লে সফল হলে, ট্রাই করো আনমিউট + ভলিউম বাড়াতে
+      // ট্রাই করো unmute+volume
       setTimeout(function() {
         player.muted(false);
         player.volume(0.5);
       }, 100);
     }).catch(function(error) {
-      // যদি প্লে ব্লক করে, কিছু নোটিস দিতে চাও তো এখানে দাও
+      // Autoplay policy
     });
 
     if (player.qualityLevels) {
@@ -217,11 +227,44 @@ footer span {
     player.on('loadedmetadata', set360p);
   });
 
-  // যদি ইউজার কোনোভাবে প্লে করে, তখনও unmute+volume সেট ট্রাই করা
   player.on('play', function() {
     player.muted(false);
     player.volume(0.5);
   });
+
+  // --- Visitor Counter Secret Reveal Logic ---
+  (function(){
+    const footer = document.getElementById('my-footer');
+    const counter = document.getElementById('visitor-counter');
+    let clicks = [];
+    let revealTimeout = null;
+
+    footer.addEventListener('click', function(e){
+      // শুধু footer-এর ফাঁকা জায়গায় ক্লিক ধরো, আইকন বা লিংকে না
+      if (
+        e.target.classList.contains('icon-link') ||
+        e.target.closest('.icon-link') ||
+        e.target.classList.contains('visitor-counter') ||
+        e.target.closest('.visitor-counter')
+      ) {
+        return;
+      }
+
+      const now = Date.now();
+      clicks.push(now);
+
+      // কেবল শেষ ৫ সেকেন্ডের ক্লিক হিসাব করো
+      clicks = clicks.filter(ts => now - ts <= 5000);
+
+      if (clicks.length >= 10) {
+        // রিভিল
+        counter.classList.add('visible');
+        // ৫ সেকেন্ড পর আবার hide করে দিতে চাইলে নিচের ৩ লাইনের কমেন্ট তুলে দাও
+        // clearTimeout(revealTimeout);
+        revealTimeout = setTimeout(() => counter.classList.remove('visible'), 5000);
+      }
+    });
+  })();
 </script>
 </body>
 </html>
