@@ -8,22 +8,23 @@
 <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet" />
 <!-- Video.js CSS -->
 <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
+<!-- Font Awesome for social icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
 
 <style>
 body {
   margin: 0; padding: 0;
   font-family: 'Montserrat', sans-serif;
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   align-items: center;
 }
-/* Header */
 .header {
-  padding: 30px 20px 10px;
+  padding: 22px 10px 8px;
   text-align: center;
-  font-size: 2.2rem;
+  font-size: 1.7rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   background: linear-gradient(90deg, #ffd700, #ff8c00);
@@ -32,64 +33,100 @@ body {
   text-shadow: 0 2px 12px rgba(0,0,0,0.4);
   width: 100%;
 }
-/* Video container, only as much as needed */
+
+/* Crop effect */
 .video-section {
-  padding: 40px 20px;
   width: 100%;
   max-width: 900px;
+  padding: 20px 0 10px 0;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.video-js {
+.video-cropper {
+  position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
-  border-radius: 12px;
+  aspect-ratio: 16 / 7; /* একটু কম উচ্চতা, 16:7 */
+  overflow: hidden;
+  border-radius: 15px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.video-js {
+  position: absolute;
+  top: -14.5%; /* উপরে তুলে দাও (উপর-নিচ থেকে crop) */
+  left: 0;
+  width: 100%;
+  height: 140%;   /* ভিডিও একটু লম্বা, যাতে crop হয় */
+  object-fit: cover;
+  background: #000;
+  border-radius: 0;
 }
 
-/* Footer with icons and name */
 footer {
   display: flex;
   justify-content: center;
   align-items: center;
   background: rgba(0,0,0,0.8);
-  padding: 12px 20px;
-  gap: 20px;
+  padding: 10px 6px;
+  gap: 16px;
   width: 100%;
   flex-wrap: wrap;
+  flex-direction: row;
 }
 footer span {
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #ffd700;
 }
 .icon-link {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
-  background: rgba(255,255,255,0.1);
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,0.10);
   border-radius: 50%;
-  font-size: 1.8em;
+  font-size: 1.5em;
   color: #fff;
   transition: background 0.3s, transform 0.3s;
+  text-decoration: none;
 }
 .icon-link:hover {
   background: rgba(255,255,255,0.3);
   transform: scale(1.1);
 }
-@media(max-width: 600px){
+.visitor-counter {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+.visitor-counter img {
+  height: 24px;
+  width: auto;
+  vertical-align: middle;
+  border-radius: 3px;
+}
+@media(min-width: 600px){
   .header {
-    font-size: 1.7rem;
+    font-size: 2.2rem;
   }
-  footer {
-    gap: 15px;
+  .video-section {
+    max-width: 900px;
+    padding: 28px 0 18px 0;
+  }
+  .video-cropper {
+    border-radius: 22px;
   }
   .icon-link {
-    width: 45px;
-    height: 45px;
-    font-size: 1.6em;
+    width: 48px;
+    height: 48px;
+    font-size: 1.8em;
+  }
+  .visitor-counter img {
+    height: 30px;
   }
 }
 </style>
@@ -97,31 +134,35 @@ footer span {
 <body>
 
 <div class="header">
-  LIVE  SONY SPORTS 2
+  LIVE SONY SPORTS 2
 </div>
 
 <div class="video-section">
-  <video
-    id="my-video"
-    class="video-js vjs-default-skin"
-    controls
-    preload="auto"
-    poster="https://via.placeholder.com/900x506/000000/FFFFFF?text=Live+Stream"
-    data-setup='{}'
-  >
-    <source src="https://tataplay.slivcdn.com/hls/live/2020590/TEN2SD/master_1300.m3u8" type="application/x-mpegURL" />
-  </video>
+  <div class="video-cropper">
+    <video
+      id="my-video"
+      class="video-js vjs-default-skin"
+      controls
+      preload="auto"
+      poster="https://via.placeholder.com/900x394/000000/FFFFFF?text=Live+Stream"
+      data-setup='{}'
+    >
+      <source src="https://tataplay.slivcdn.com/hls/live/2020590/TEN2SD/master_1300.m3u8" type="application/x-mpegURL" />
+    </video>
+  </div>
 </div>
 
-<!-- Footer with icons -->
 <footer>
-  <span>CNP SLIV 2| All Rights Reserved</span>
-  <a href="https://t.me/sayan_xyz" target="_blank" class="icon-link" title="Telegram">
-    <i class="fab fa-telegram-plane"></i>
-  </a>
+  <span>CNP S-LIV 2 | All Rights Reserved</span>
   <a href="https://whatsapp.com/channel/0029Va9UKhEL7UVN6cfr8a16" target="_blank" class="icon-link" title="WhatsApp">
     <i class="fab fa-whatsapp"></i>
   </a>
+  <a href="https://t.me/sayan_xyz" target="_blank" class="icon-link" title="Instagram">
+    <i class="fab fa-telegram"></i>
+  </a>
+  <span class="visitor-counter">
+    <img src="https://camo.githubusercontent.com/349509c442090d3702a13dc0ad9dc77c6783d62aaded298e3792edf193f4fca2/68747470733a2f2f6b6f6d617265762e636f6d2f67687076632f3f757365726e616d653d736179616e266c6162656c3d50726f66696c65253230766965777326636f6c6f723d306537356236267374796c653d666c6174" alt="visitor counter">
+  </span>
 </footer>
 
 <!-- Video.js JS -->
@@ -129,26 +170,47 @@ footer span {
 <script>
   var player = videojs('my-video', {
     autoplay: true,
-    muted: true,
+    muted: false,
     preload: 'auto',
     controlBar: {
       pictureInPictureToggle: true,
-      // You can hide controls if you want a cleaner look
     }
   });
-  // Set default quality to 360p if quality levels are supported
+
+  // প্লেয়ার রেডি হলে আনমিউট, মাঝারি ভলিউম, ৩৬০p সেট করো
   player.ready(function() {
-    if (player.qualityLevels) {
-      var levels = player.qualityLevels();
-      for (var i=0; i<levels.length; i++) {
-        if (levels[i].width <= 640 && levels[i].height <= 360) {
-          levels.selectedIndex = i;
-          break;
+    player.muted(false);
+    player.volume(0.5);
+    var playPromise = player.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(function(error) {
+        // autoplay block হলে alert চাইলে এখানে দাও
+      });
+    }
+
+    // ডিফল্ট কোয়ালিটি 360p
+    function set360p() {
+      if (player.qualityLevels) {
+        var levels = player.qualityLevels();
+        for (var i = 0; i < levels.length; i++) {
+          if (levels[i].height === 360) {
+            levels.selectedIndex_ = i;
+            // levels[i].enabled = true; // কিছু প্লাগিনে দরকার হতে পারে
+            break;
+          }
         }
       }
     }
+
+    // কোয়ালিটি লেভেল লোড হলে ৩৬০p সেট করো
+    if (player.qualityLevels) {
+      var levels = player.qualityLevels();
+      levels.on && levels.on('addqualitylevel', set360p);
+    }
+    // ভিডিও লোড হলে আবার চেক করো
+    player.on('loadedmetadata', set360p);
   });
 </script>
-
 </body>
-</html>
+      </html>
+      
