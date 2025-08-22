@@ -34,11 +34,11 @@ body {
   width: 100%;
 }
 
-/* Crop effect */
+/* Slightly bigger video area */
 .video-section {
   width: 100%;
-  max-width: 900px;
-  padding: 20px 0 10px 0;
+  max-width: 1100px; /* আগের চেয়ে সামান্য বড় */
+  padding: 24px 0 12px 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -46,10 +46,10 @@ body {
 .video-cropper {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 7; /* একটু কম উচ্চতা, 16:7 */
+  aspect-ratio: 16 / 6.5; /* সামান্য বড় aspect (আগে 16/7 ছিল) */
   overflow: hidden;
-  border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+  border-radius: 16px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.6);
   background: #000;
   display: flex;
   align-items: center;
@@ -57,10 +57,10 @@ body {
 }
 .video-js {
   position: absolute;
-  top: -14.5%; /* উপরে তুলে দাও (উপর-নিচ থেকে crop) */
+  top: -11%; /* আগের চেয়ে সামান্য কম crop */
   left: 0;
   width: 100%;
-  height: 140%;   /* ভিডিও একটু লম্বা, যাতে crop হয় */
+  height: 122%; /* আগের চেয়ে সামান্য কম crop */
   object-fit: cover;
   background: #000;
   border-radius: 0;
@@ -114,8 +114,8 @@ footer span {
     font-size: 2.2rem;
   }
   .video-section {
-    max-width: 900px;
-    padding: 28px 0 18px 0;
+    max-width: 1100px;
+    padding: 32px 0 20px 0;
   }
   .video-cropper {
     border-radius: 22px;
@@ -144,8 +144,10 @@ footer span {
       class="video-js vjs-default-skin"
       controls
       preload="auto"
-      poster="https://via.placeholder.com/900x394/000000/FFFFFF?text=Live+Stream"
+      poster="https://via.placeholder.com/1100x338/000000/FFFFFF?text=Live+Stream"
       data-setup='{}'
+      playsinline
+      autoplay
     >
       <source src="https://tataplay.slivcdn.com/hls/live/2020590/TEN2SD/master_1300.m3u8" type="application/x-mpegURL" />
     </video>
@@ -177,40 +179,41 @@ footer span {
     }
   });
 
-  // প্লেয়ার রেডি হলে আনমিউট, মাঝারি ভলিউম, ৩৬০p সেট করো
+  // প্লেয়ার রেডি হলে
   player.ready(function() {
     player.muted(false);
     player.volume(0.5);
-    var playPromise = player.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(function(error) {
-        // autoplay block হলে alert চাইলে এখানে দাও
-      });
-    }
 
-    // ডিফল্ট কোয়ালিটি 360p
+    // ডিফল্ট কোয়ালিটি 360p
     function set360p() {
       if (player.qualityLevels) {
         var levels = player.qualityLevels();
         for (var i = 0; i < levels.length; i++) {
           if (levels[i].height === 360) {
             levels.selectedIndex_ = i;
-            // levels[i].enabled = true; // কিছু প্লাগিনে দরকার হতে পারে
             break;
           }
         }
       }
     }
 
-    // কোয়ালিটি লেভেল লোড হলে ৩৬০p সেট করো
     if (player.qualityLevels) {
       var levels = player.qualityLevels();
       levels.on && levels.on('addqualitylevel', set360p);
     }
-    // ভিডিও লোড হলে আবার চেক করো
     player.on('loadedmetadata', set360p);
+
+    // মোস্ট ইম্পর্ট্যান্ট: autoplay + unmute + play()
+    var playPromise = player.play();
+    if (playPromise !== undefined) {
+      playPromise.then(function() {
+        player.muted(false);
+        player.volume(0.5);
+      }).catch(function(error) {
+        // যদি ব্রাউজার ব্লক করে, ইউজারকে কোনো মেসেজও দেখাতে পারো
+      });
+    }
   });
 </script>
 </body>
-      </html>
-      
+</html>
