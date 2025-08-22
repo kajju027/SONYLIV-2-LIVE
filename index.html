@@ -1,311 +1,135 @@
-<!doctype html>
-<html lang="bn">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Live Player</title>
-  <link rel="preconnect" href="https://cdn.jsdelivr.net">
-  <style>
-    :root{
-      --bg:#0b0f14;
-      --fg:#e6f0ff;
-      --muted:#8aa0b6;
-      --accent:#3da5ff;
-      --accent-2:#00d1b2;
-      --danger:#ff4d4f;
-      --shadow:0 10px 30px rgba(0,0,0,.5);
-      --radius:18px;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SONY SPORTS 2 LIVE</title>
+<!-- Google Fonts for a sleek look -->
+<link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet" />
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<style>
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Header Title */
+  .header-title {
+    padding: 30px 20px 10px;
+    text-align: center;
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    background: linear-gradient(90deg, #ffd700, #ff8c00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  }
+
+  /* Video Container */
+  .video-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+  }
+  .video-wrapper {
+    width: 100%;
+    max-width: 800px;
+    aspect-ratio: 16 / 9;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;
+  }
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  /* Footer styles */
+  footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.8);
+    padding: 12px 20px;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  footer span {
+    font-size: 1rem;
+    color: #ffd700;
+  }
+
+  .icon-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    font-size: 1.8em;
+    color: #fff;
+    transition: background 0.3s, transform 0.3s;
+  }
+  .icon-link:hover {
+    background: rgba(255,255,255,0.3);
+    transform: scale(1.1);
+  }
+
+  /* Responsive adjustments */
+  @media(max-width: 600px){
+    .header-title {
+      font-size: 1.7rem;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      background:var(--bg);
-      color:var(--fg);
-      font:16px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+    footer {
+      justify-content: center;
     }
-    .wrap{
-      width:100%;
-      height:100vh;
-      display:grid;
-      place-items:center;
-      padding:0;
+    .icon-link {
+      width: 45px;
+      height: 45px;
+      font-size: 1.6em;
     }
-    .player{
-      position:relative;
-      width:100%;
-      height:100%;
-      background:#000;
-      overflow:hidden;
-    }
-    video{
-      width:100%;
-      height:100%;
-      object-fit:contain;
-      background:#000;
-      display:block;
-    }
-    /* Loading overlay */
-    .loading{
-      position:absolute; inset:0;
-      display:grid; place-items:center;
-      background:rgba(0,0,0,.9);
-      color:var(--fg);
-      font-weight:600;
-      letter-spacing:.06em;
-      gap:18px;
-      transition:opacity .25s ease;
-    }
-    .loading.hidden{opacity:0; pointer-events:none;}
-    .bar{
-      width:min(520px,82vw);
-      height:26px;
-      border:3px solid #fff;
-      border-radius:12px;
-      padding:3px;
-    }
-    .bar>i{
-      display:block;
-      height:100%;
-      width:38%;
-      background:linear-gradient(90deg,var(--accent),var(--accent-2));
-      border-radius:9px;
-      animation:fill 1.4s infinite ease-in-out;
-    }
-    @keyframes fill { 0%{ width:12% } 50%{ width:76% } 100%{ width:12% } }
-    .loading .text{font-size:clamp(16px,3.5vw,28px)}
-    /* Controls */
-    .controls{
-      position:absolute; left:0; right:0; bottom:0;
-      display:flex; align-items:center; gap:12px;
-      padding:10px 12px;
-      background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.65) 30%, rgba(0,0,0,.85));
-    }
-    .btn{
-      border:0; background:#1b2634; color:var(--fg);
-      padding:9px 12px; border-radius:12px;
-      display:inline-flex; align-items:center; gap:8px;
-      cursor:pointer; box-shadow:var(--shadow);
-    }
-    .btn:active{transform:translateY(1px)}
-    .time, .spacer{color:var(--muted); font-weight:600; font-variant-numeric:tabular-nums}
-    .spacer{flex:1}
-    input[type=range]{width:140px}
-    .gear{width:24px;height:24px;display:inline-block}
-    .menu{
-      position:absolute; right:12px; bottom:58px;
-      background:#0f1620; border:1px solid #223147; border-radius:12px;
-      padding:8px; min-width:160px; box-shadow:var(--shadow); display:none;
-    }
-    .menu.open{display:block}
-    .menu h4{margin:4px 8px 8px; font-size:14px; color:var(--muted)}
-    .menu button{
-      display:block; width:100%; text-align:left;
-      background:transparent; border:0; color:var(--fg);
-      padding:8px 10px; border-radius:10px; cursor:pointer;
-    }
-    .menu button.active{background:#1b2634}
-    /* Fake alert modal */
-    .modal{
-      position:fixed; inset:0; display:grid; place-items:center;
-      background:rgba(0,0,0,.72); z-index:10;
-    }
-    .modal .box{
-      width:min(520px,92vw);
-      background:#121a26; border:1px solid #24344d;
-      border-radius:var(--radius); padding:18px;
-      box-shadow:var(--shadow);
-    }
-    .modal .title{font-size:18px; margin:4px 0 10px}
-    .modal .text{color:var(--muted); margin-bottom:14px}
-    .modal .row{display:flex; gap:10px; justify-content:flex-end}
-    .modal .ok{background:var(--accent); color:#001018}
-    .modal .cancel{background:#2a3547}
-    @media (orientation:portrait){
-      .controls{gap:8px}
-      input[type=range]{width:110px}
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="player" id="player">
-      <video id="video" playsinline webkit-playsinline preload="auto" controlslist="nodownload noplaybackrate foobar"></video>
 
-      <div class="loading" id="loading">
-        <div class="bar"><i></i></div>
-        <div class="text">Loading... Please Wait</div>
-      </div>
+<div class="header-title">
+  LIVE SONY SPORTS 2
+</div>
 
-      <div class="controls" id="controls">
-        <button class="btn" id="play">►</button>
-        <div class="time"><span id="cur">00:00</span></div>
-        <div class="spacer"></div>
-        <label class="time">Vol</label>
-        <input type="range" min="0" max="1" step="0.01" id="vol">
-        <button class="btn" id="settings" aria-label="Settings">
-          <svg class="gear" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm9.44 3.03-1.72-.99.02-.54a8.9 8.9 0 0 0-.6-2.3l.36-.41-1.23-2.12-.53.15a8.9 8.9 0 0 0-2.17-1.25l-.15-.53-2.44-.02-.15.53c-.78.28-1.5.66-2.17 1.13l-.49-.28L6.7 4.84l.28.49c-.47.67-.85 1.4-1.13 2.17l-.53.15-.02 2.44.53.15c.28.78.66 1.5 1.13 2.17l-.28.49 1.23 2.12.49-.28c.67.47 1.4.85 2.17 1.13l.15.53 2.44.02.15-.53a8.9 8.9 0 0 0 2.17-1.13l.53.3 1.23-2.12-.36-.41c.27-.74.46-1.5.56-2.28l.54-.02 1.72-.99Z"/>
-          </svg>
-          Settings
-        </button>
-      </div>
-
-      <div class="menu" id="menu">
-        <h4>Quality</h4>
-        <div id="qualityList"></div>
-      </div>
-    </div>
+<div class="video-section">
+  <div class="video-wrapper">
+    <!-- Using your provided link -->
+    <iframe src="https://tvgo.neocities.org/APPTV/jiohd?id=1142&autoplay=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen loading="eager"></iframe>
   </div>
+</div>
 
-  <!-- Fake alert -->
-  <div class="modal" id="modal">
-    <div class="box">
-      <div class="title">cnp-sonyliv2.pages.dev says</div>
-      <div class="text">Join our WhatsApp Channel</div>
-      <div class="row">
-        <button class="btn cancel" id="m-cancel">Cancel</button>
-        <button class="btn ok" id="m-ok">OK</button>
-      </div>
-    </div>
-  </div>
+<!-- Footer with icons -->
+<footer>
+  <span>CNP SLIV 2| All Rights Reserved</span>
+  <a href="https://t.me/sayan_xyz" target="_blank" class="icon-link" title="Telegram Channel">
+    <i class="fab fa-telegram-plane"></i>
+  </a>
+  <a href="https://whatsapp.com/channel/0029Va9UKhEL7UVN6cfr8a16" target="_blank" class="icon-link" title="WhatsApp Channel">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  <img src="https://camo.githubusercontent.com/349509c442090d3702a13dc0ad9dc77c6783d62aaded298e3792edf193f4fca2/68747470733a2f2f6b6f6d617265762e636f6d2f67687076632f3f757365726e616d653d736179616e266c6162656c3d50726f66696c65253230766965777326636f6c6f723d306537356236267374796c653d666c6174" alt="Visitor Counter" style="height:20px; border-radius:4px; margin-left:10px;">
+</footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-  <script>
-    const SRC = "https://dtvxtream.com/sonyliv2/300273.m3u8"; // live m3u8
-    const WA_LINK = "https://whatsapp.com/channel/0029Va9UKhEL7UVN6cfr8a16";
-
-    const video = document.getElementById('video');
-    const loading = document.getElementById('loading');
-    const playBtn = document.getElementById('play');
-    const cur = document.getElementById('cur');
-    const vol = document.getElementById('vol');
-    const settingsBtn = document.getElementById('settings');
-    const menu = document.getElementById('menu');
-    const qualityList = document.getElementById('qualityList');
-    const modal = document.getElementById('modal');
-    const okBtn = document.getElementById('m-ok');
-    const cancelBtn = document.getElementById('m-cancel');
-
-    // Modal behavior
-    okBtn.onclick = () => { window.open(WA_LINK,'_blank'); modal.remove(); start(); };
-    cancelBtn.onclick = () => { modal.remove(); start(); };
-
-    // Player
-    let hls;
-    function start(){
-      if(Hls.isSupported()){
-        hls = new Hls({
-          autoStartLoad: true,
-          startPosition: -1,
-          liveBackBufferLength: 10,
-          maxBufferLength: 10,
-          backBufferLength: 5,
-          lowLatencyMode: true
-        });
-        hls.loadSource(SRC);
-        hls.attachMedia(video);
-
-        hls.on(Hls.Events.MANIFEST_PARSED, (_evt, data) => {
-          // Build quality list
-          const levels = data.levels.map((l, idx) => ({height:l.height||0, index:idx, name:(l.height?l.height+'p':'Auto')}));
-          // Include Auto
-          addQualityButton('Auto', -1);
-
-          // Unique heights high->low
-          const seen = new Set();
-          levels.sort((a,b)=>b.height-a.height).forEach(l=>{
-            if(!seen.has(l.height) && l.height){
-              seen.add(l.height);
-              addQualityButton(l.height+'p', l.index);
-            }
-          });
-
-          // pick default between 144-360, prefer 240
-          const preferredHeights = [240, 216, 288, 144, 360];
-          let target = -1;
-          for(const ph of preferredHeights){
-            const match = levels.find(l=>l.height===ph);
-            if(match){ target = match.index; break; }
-          }
-          if(target === -1){
-            const band = levels.filter(l=>l.height>=144 && l.height<=360);
-            if(band.length){ target = band.sort((a,b)=>Math.abs(240-a.height)-Math.abs(240-b.height))[0].index; }
-          }
-          if(target !== -1){ hls.currentLevel = target; }
-          video.play().catch(()=>{});
-        });
-
-        hls.on(Hls.Events.LEVEL_SWITCHED, ()=> highlightActive());
-        hls.on(Hls.Events.FRAG_BUFFERED, ()=> hideLoadingSoon());
-        hls.on(Hls.Events.ERROR, (evt,data)=>{
-          if(data.fatal){ hls.destroy(); showLoading("Reconnecting..."); setTimeout(start, 1000); }
-        });
-      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        // iOS Safari
-        video.src = SRC;
-        video.addEventListener('loadedmetadata', () => video.play());
-      } else {
-        showLoading("Unsupported browser");
-      }
-    }
-
-    function addQualityButton(label, index){
-      const btn = document.createElement('button');
-      btn.textContent = label;
-      btn.dataset.index = index;
-      btn.onclick = () => {
-        if(index === -1){ hls.currentLevel = -1; }
-        else { hls.currentLevel = Number(index); }
-        highlightActive();
-        menu.classList.remove('open');
-      };
-      qualityList.appendChild(btn);
-      highlightActive();
-    }
-    function highlightActive(){
-      const buttons = qualityList.querySelectorAll('button');
-      buttons.forEach(b=>b.classList.remove('active'));
-      const activeIndex = hls ? hls.currentLevel : -1;
-      const target = Array.from(buttons).find(b=>Number(b.dataset.index)===activeIndex);
-      if(target) target.classList.add('active');
-    }
-
-    // UI wiring
-    playBtn.onclick = () => { if(video.paused){ video.play(); } else { video.pause(); } };
-    video.addEventListener('play', ()=>{ playBtn.textContent = '❚❚'; hideLoadingSoon(); });
-    video.addEventListener('pause', ()=> playBtn.textContent = '►');
-    video.addEventListener('timeupdate', ()=> cur.textContent = fmt(video.currentTime));
-    vol.oninput = e => video.volume = e.target.value;
-    settingsBtn.onclick = () => menu.classList.toggle('open');
-    document.addEventListener('click', (e)=>{
-      if(!menu.contains(e.target) && e.target!==settingsBtn) menu.classList.remove('open');
-    });
-
-    function fmt(s){
-      s = Math.floor(s||0);
-      const m = String(Math.floor(s/60)).padStart(2,'0');
-      const ss = String(s%60).padStart(2,'0');
-      return m+':'+ss;
-    }
-
-    function hideLoadingSoon(){
-      loading.classList.add('hidden');
-      setTimeout(()=> loading.style.display='none', 300);
-    }
-    function showLoading(text){
-      loading.style.display='grid';
-      loading.classList.remove('hidden');
-      const el = loading.querySelector('.text');
-      if(text) el.textContent = text;
-    }
-
-    // Start only after user sees modal; autoplay may be blocked otherwise.
-    // If modal gets removed by adblockers, still start after short delay.
-    setTimeout(()=>{ if(document.getElementById('modal')) return; start(); }, 1200);
-  </script>
 </body>
-</html>
+    </html>
+      
