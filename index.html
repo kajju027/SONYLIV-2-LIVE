@@ -4,141 +4,73 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>SONY SPORTS 2 LIVE</title>
-<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet" />
-<!-- Video.js CSS -->
 <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
-<!-- Font Awesome for social icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-
 <style>
 body {
   margin: 0; padding: 0;
   font-family: 'Montserrat', sans-serif;
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: flex; flex-direction: column; align-items: center;
 }
-.header {
-  padding: 22px 10px 8px;
-  text-align: center;
-  font-size: 1.7rem;
-  font-weight: 700;
+.header { padding: 22px 10px 8px; text-align: center; font-size: 2.2rem; font-weight: 700;
   letter-spacing: 0.05em;
   background: linear-gradient(90deg, #ffd700, #ff8c00);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.4);
-  width: 100%;
-}
-
-.video-section {
-  width: 100%;
-  max-width: 1100px;
-  padding: 26px 0 14px 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.4); width: 100%; }
+.video-section { width: 100%; max-width: 1100px; padding: 26px 0 14px 0; display: flex; justify-content: center; align-items: center;}
 .video-cropper {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 8;
-  overflow: hidden;
-  border-radius: 18px;
-  box-shadow: 0 8px 22px rgba(0,0,0,0.6);
-  background: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: relative; width: 100%; aspect-ratio: 16 / 8;
+  overflow: hidden; border-radius: 18px; box-shadow: 0 8px 22px rgba(0,0,0,0.6);
+  background: #000; display: flex; align-items: center; justify-content: center;
 }
 .video-js {
-  position: absolute;
-  top: -6%;
-  left: 0;
-  width: 100%;
-  height: 112%;
-  object-fit: cover;
-  background: #000;
-  border-radius: 0;
+  position: absolute; top: -6%; left: 0; width: 100%; height: 112%;
+  object-fit: cover; background: #000; border-radius: 0;
 }
-
 footer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0,0,0,0.8);
-  padding: 10px 6px;
-  gap: 16px;
-  width: 100%;
-  flex-wrap: wrap;
-  flex-direction: row;
-  position: relative;
-  min-height: 48px;
-  user-select: none;
-  cursor: pointer;
+  display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.8);
+  padding: 10px 6px; gap: 16px; width: 100%; flex-wrap: wrap; flex-direction: row;
+  min-height: 48px; user-select: none; cursor: pointer;
 }
-footer span {
-  font-size: 0.95rem;
-  color: #ffd700;
-}
+footer span { font-size: 0.95rem; color: #ffd700; }
 .icon-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  background: rgba(255,255,255,0.10);
-  border-radius: 50%;
-  font-size: 1.7em;
-  color: #fff;
-  transition: background 0.3s, transform 0.3s;
-  text-decoration: none;
+  display: flex; align-items: center; justify-content: center; width: 44px; height: 44px;
+  background: rgba(255,255,255,0.10); border-radius: 50%; font-size: 1.7em; color: #fff;
+  transition: background 0.3s, transform 0.3s; text-decoration: none;
 }
-.icon-link:hover {
-  background: rgba(255,255,255,0.3);
-  transform: scale(1.1);
-}
-.visitor-counter {
-  display: none; /* ডিফল্টে গোপন */
-  align-items: center;
-  margin-left: 10px;
-}
-.visitor-counter.visible {
-  display: flex !important;
-  animation: growIn .5s;
-}
-@keyframes growIn {
-  from {transform: scale(0.8); opacity: 0;}
-  to {transform: scale(1); opacity: 1;}
-}
-.visitor-counter img {
-  height: 24px;
-  width: auto;
-  vertical-align: middle;
-  border-radius: 3px;
-}
+.icon-link:hover { background: rgba(255,255,255,0.3); transform: scale(1.1);}
+.visitor-counter { display: none; align-items: center; margin-left: 10px;}
+.visitor-counter.visible { display: flex !important; animation: growIn .5s;}
+@keyframes growIn { from {transform: scale(0.8); opacity: 0;} to {transform: scale(1); opacity: 1;}}
+.visitor-counter img { height: 24px; width: auto; vertical-align: middle; border-radius: 3px; }
 @media(min-width: 600px){
-  .header {
-    font-size: 2.2rem;
-  }
-  .video-section {
-    max-width: 1100px;
-    padding: 36px 0 22px 0;
-  }
-  .video-cropper {
-    border-radius: 24px;
-  }
-  .icon-link {
-    width: 54px;
-    height: 54px;
-    font-size: 2em;
-  }
-  .visitor-counter img {
-    height: 30px;
-  }
+  .video-section { max-width: 1100px; padding: 36px 0 22px 0;}
+  .video-cropper { border-radius: 24px;}
+  .icon-link { width: 54px; height: 54px; font-size: 2em;}
+  .visitor-counter img { height: 30px;}
+}
+#unmute-hint {
+  display: none;
+  position: fixed;
+  left: 50%;
+  bottom: 20%;
+  transform: translateX(-50%);
+  font-size: 1.2em;
+  background: #222d;
+  color: #ffd700;
+  padding: 14px 28px;
+  border-radius: 12px;
+  z-index: 9999;
+  animation: fadeIn 0.4s;
+  font-family: 'Montserrat', sans-serif;
+  box-shadow: 0 2px 14px #0007;
+}
+@keyframes fadeIn {
+  from { opacity: 0;}
+  to { opacity: 1;}
 }
 </style>
 </head>
@@ -179,10 +111,11 @@ footer span {
   </span>
 </footer>
 
+<div id="unmute-hint">🔊 সাউন্ড শুনতে এখানে একবার ট্যাপ/ক্লিক করুন</div>
+
 <!-- Video.js JS -->
 <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
 <script>
-  // Video.js config
   var player = videojs('my-video', {
     autoplay: 'any',
     muted: true,
@@ -192,7 +125,7 @@ footer span {
     }
   });
 
-  // Default 360p set
+  // 360p force
   function set360p() {
     if (player.qualityLevels) {
       var levels = player.qualityLevels();
@@ -205,19 +138,17 @@ footer span {
     }
   }
 
-  // Autoplay + 360p + unmute (if possible)
+  // Autoplay + 360p + unmute (best attempt)
   player.ready(function() {
     set360p();
-
     player.muted(true);
     player.play().then(function() {
-      // ট্রাই করো unmute+volume
       setTimeout(function() {
         player.muted(false);
         player.volume(0.5);
-      }, 100);
-    }).catch(function(error) {
-      // Autoplay policy
+      }, 150);
+    }).catch(function() {
+      // autoplay policy
     });
 
     if (player.qualityLevels) {
@@ -228,19 +159,41 @@ footer span {
   });
 
   player.on('play', function() {
+    set360p();
     player.muted(false);
     player.volume(0.5);
   });
 
-  // --- Visitor Counter Secret Reveal Logic ---
+  // যদি সাউন্ড ব্লক হয়, ইউজারকে unmute করতে বলো (ওভারলে)
+  function showUnmuteHint() {
+    var hint = document.getElementById('unmute-hint');
+    hint.style.display = 'block';
+    setTimeout(function(){ hint.style.display = 'none'; }, 5500);
+  }
+
+  setTimeout(function(){
+    if(player.muted() || player.volume() === 0){
+      showUnmuteHint();
+    }
+  }, 1800);
+
+  // যেকোনো ক্লিক বা ট্যাপে unmute করার চেষ্টা
+  function tryUnmute() {
+    player.muted(false);
+    player.volume(0.5);
+    document.getElementById('unmute-hint').style.display = 'none';
+    window.removeEventListener('click', tryUnmute);
+    window.removeEventListener('touchstart', tryUnmute);
+  }
+  window.addEventListener('click', tryUnmute);
+  window.addEventListener('touchstart', tryUnmute);
+
+  // Visitor Counter Secret Reveal Logic (optional)
   (function(){
     const footer = document.getElementById('my-footer');
     const counter = document.getElementById('visitor-counter');
     let clicks = [];
-    let revealTimeout = null;
-
     footer.addEventListener('click', function(e){
-      // শুধু footer-এর ফাঁকা জায়গায় ক্লিক ধরো, আইকন বা লিংকে না
       if (
         e.target.classList.contains('icon-link') ||
         e.target.closest('.icon-link') ||
@@ -249,22 +202,15 @@ footer span {
       ) {
         return;
       }
-
       const now = Date.now();
       clicks.push(now);
-
-      // কেবল শেষ ৫ সেকেন্ডের ক্লিক হিসাব করো
       clicks = clicks.filter(ts => now - ts <= 5000);
-
       if (clicks.length >= 10) {
-        // রিভিল
         counter.classList.add('visible');
-        // ৫ সেকেন্ড পর আবার hide করে দিতে চাইলে নিচের ৩ লাইনের কমেন্ট তুলে দাও
-        // clearTimeout(revealTimeout);
-        revealTimeout = setTimeout(() => counter.classList.remove('visible'), 5000);
       }
     });
   })();
 </script>
 </body>
-</html>
+    </html>
+  
