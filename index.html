@@ -34,11 +34,11 @@ body {
   width: 100%;
 }
 
-/* Slightly bigger video area */
+/* Slightly larger video area (less crop) */
 .video-section {
   width: 100%;
-  max-width: 1100px; /* আগের চেয়ে সামান্য বড় */
-  padding: 24px 0 12px 0;
+  max-width: 1100px;
+  padding: 26px 0 14px 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -46,9 +46,9 @@ body {
 .video-cropper {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 6.5; /* সামান্য বড় aspect (আগে 16/7 ছিল) */
+  aspect-ratio: 16 / 8;  /* আগের চেয়ে একটু বেশি উচ্চতা, কম crop */
   overflow: hidden;
-  border-radius: 16px;
+  border-radius: 18px;
   box-shadow: 0 8px 22px rgba(0,0,0,0.6);
   background: #000;
   display: flex;
@@ -57,10 +57,10 @@ body {
 }
 .video-js {
   position: absolute;
-  top: -11%; /* আগের চেয়ে সামান্য কম crop */
+  top: -6%;
   left: 0;
   width: 100%;
-  height: 122%; /* আগের চেয়ে সামান্য কম crop */
+  height: 112%; /* আগের চেয়ে কম crop */
   object-fit: cover;
   background: #000;
   border-radius: 0;
@@ -85,11 +85,11 @@ footer span {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   background: rgba(255,255,255,0.10);
   border-radius: 50%;
-  font-size: 1.5em;
+  font-size: 1.7em;
   color: #fff;
   transition: background 0.3s, transform 0.3s;
   text-decoration: none;
@@ -115,15 +115,15 @@ footer span {
   }
   .video-section {
     max-width: 1100px;
-    padding: 32px 0 20px 0;
+    padding: 36px 0 22px 0;
   }
   .video-cropper {
-    border-radius: 22px;
+    border-radius: 24px;
   }
   .icon-link {
-    width: 48px;
-    height: 48px;
-    font-size: 1.8em;
+    width: 54px;
+    height: 54px;
+    font-size: 2em;
   }
   .visitor-counter img {
     height: 30px;
@@ -144,10 +144,11 @@ footer span {
       class="video-js vjs-default-skin"
       controls
       preload="auto"
-      poster="https://via.placeholder.com/1100x338/000000/FFFFFF?text=Live+Stream"
+      poster="https://via.placeholder.com/1100x550/000000/FFFFFF?text=Live+Stream"
       data-setup='{}'
       playsinline
       autoplay
+      muted
     >
       <source src="https://tataplay.slivcdn.com/hls/live/2020590/TEN2SD/master_1300.m3u8" type="application/x-mpegURL" />
     </video>
@@ -155,11 +156,11 @@ footer span {
 </div>
 
 <footer>
-  <span>CNP S-LIV 2 | All Rights Reserved</span>
+  <span>CNP SLIV 2 | All Rights Reserved</span>
   <a href="https://whatsapp.com/channel/0029Va9UKhEL7UVN6cfr8a16" target="_blank" class="icon-link" title="WhatsApp">
     <i class="fab fa-whatsapp"></i>
   </a>
-  <a href="https://t.me/sayan_xyz" target="_blank" class="icon-link" title="Instagram">
+  <a href="https://t.me/sayan_xyz" target="_blank" class="icon-link" title="Telegram">
     <i class="fab fa-telegram"></i>
   </a>
   <span class="visitor-counter">
@@ -170,49 +171,56 @@ footer span {
 <!-- Video.js JS -->
 <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
 <script>
+  // Autoplay: Muted + Unmuted try
   var player = videojs('my-video', {
-    autoplay: true,
-    muted: false,
+    autoplay: 'any',
+    muted: true, // ব্রাউজারে অটোপ্লের জন্য muted রাখতে হয়
     preload: 'auto',
     controlBar: {
       pictureInPictureToggle: true,
     }
   });
 
-  // প্লেয়ার রেডি হলে
-  player.ready(function() {
-    player.muted(false);
-    player.volume(0.5);
-
-    // ডিফল্ট কোয়ালিটি 360p
-    function set360p() {
-      if (player.qualityLevels) {
-        var levels = player.qualityLevels();
-        for (var i = 0; i < levels.length; i++) {
-          if (levels[i].height === 360) {
-            levels.selectedIndex_ = i;
-            break;
-          }
+  // কোয়ালিটি ৩৬০p
+  function set360p() {
+    if (player.qualityLevels) {
+      var levels = player.qualityLevels();
+      for (var i = 0; i < levels.length; i++) {
+        if (levels[i].height === 360) {
+          levels.selectedIndex_ = i;
+          break;
         }
       }
     }
+  }
+
+  // প্লেয়ার রেডি হলে অটোপ্লে + আনমিউট ট্রাই + ভলিউম
+  player.ready(function() {
+    set360p();
+
+    // ব্রাউজার autoplay পলিসির জন্য প্রথমে muted=true রেখে play করাতে হয়
+    player.muted(true);
+    player.play().then(function() {
+      // প্লে সফল হলে, ট্রাই করো আনমিউট + ভলিউম বাড়াতে
+      setTimeout(function() {
+        player.muted(false);
+        player.volume(0.5);
+      }, 100);
+    }).catch(function(error) {
+      // যদি প্লে ব্লক করে, কিছু নোটিস দিতে চাও তো এখানে দাও
+    });
 
     if (player.qualityLevels) {
       var levels = player.qualityLevels();
       levels.on && levels.on('addqualitylevel', set360p);
     }
     player.on('loadedmetadata', set360p);
+  });
 
-    // মোস্ট ইম্পর্ট্যান্ট: autoplay + unmute + play()
-    var playPromise = player.play();
-    if (playPromise !== undefined) {
-      playPromise.then(function() {
-        player.muted(false);
-        player.volume(0.5);
-      }).catch(function(error) {
-        // যদি ব্রাউজার ব্লক করে, ইউজারকে কোনো মেসেজও দেখাতে পারো
-      });
-    }
+  // যদি ইউজার কোনোভাবে প্লে করে, তখনও unmute+volume সেট ট্রাই করা
+  player.on('play', function() {
+    player.muted(false);
+    player.volume(0.5);
   });
 </script>
 </body>
