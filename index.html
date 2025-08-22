@@ -19,7 +19,7 @@ body {
   min-height: 100vh;
   align-items: center;
 }
-/* হেডার */
+/* Header */
 .header {
   padding: 30px 20px 10px;
   text-align: center;
@@ -32,16 +32,14 @@ body {
   text-shadow: 0 2px 12px rgba(0,0,0,0.4);
   width: 100%;
 }
-
-/* ভিডিও কন্টেইনার */
+/* Video container, only as much as needed */
 .video-section {
-  padding: 50px 20px;
+  padding: 40px 20px;
   width: 100%;
   max-width: 900px;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex: 1;
 }
 .video-js {
   width: 100%;
@@ -50,7 +48,7 @@ body {
   box-shadow: 0 8px 20px rgba(0,0,0,0.6);
 }
 
-/* ফুটার নেই, শুধুই হোয়াটসঅ্যাপ ও টেলিগ্রাম আইকন */
+/* Footer with icons and name */
 footer {
   display: flex;
   justify-content: center;
@@ -59,8 +57,13 @@ footer {
   padding: 12px 20px;
   gap: 20px;
   width: 100%;
+  flex-wrap: wrap;
 }
-footer a {
+footer span {
+  font-size: 1rem;
+  color: #ffd700;
+}
+.icon-link {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -72,7 +75,7 @@ footer a {
   color: #fff;
   transition: background 0.3s, transform 0.3s;
 }
-footer a:hover {
+.icon-link:hover {
   background: rgba(255,255,255,0.3);
   transform: scale(1.1);
 }
@@ -83,7 +86,7 @@ footer a:hover {
   footer {
     gap: 15px;
   }
-  footer a {
+  .icon-link {
     width: 45px;
     height: 45px;
     font-size: 1.6em;
@@ -94,7 +97,7 @@ footer a:hover {
 <body>
 
 <div class="header">
-  LIVE SONY SPORTS 2
+  LIVE  SONY SPORTS 2
 </div>
 
 <div class="video-section">
@@ -110,12 +113,13 @@ footer a:hover {
   </video>
 </div>
 
-<!-- ফুটার -->
+<!-- Footer with icons -->
 <footer>
-  <a href="https://t.me/sayan_xyz" target="_blank" title="Telegram Channel">
+  <span>CNP SLIV 2| All Rights Reserved</span>
+  <a href="https://t.me/sayan_xyz" target="_blank" class="icon-link" title="Telegram">
     <i class="fab fa-telegram-plane"></i>
   </a>
-  <a href="https://whatsapp.com/channel/0029Va9UKhEL7UVN6cfr8a16" target="_blank" title="WhatsApp Channel">
+  <a href="https://whatsapp.com/channel/0029Va9UKhEL7UVN6cfr8a16" target="_blank" class="icon-link" title="WhatsApp">
     <i class="fab fa-whatsapp"></i>
   </a>
 </footer>
@@ -123,13 +127,16 @@ footer a:hover {
 <!-- Video.js JS -->
 <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
 <script>
-  // ভিডিও প্লেয়ার ইনিশিয়ালাইজ
   var player = videojs('my-video', {
     autoplay: true,
     muted: true,
     preload: 'auto',
+    controlBar: {
+      pictureInPictureToggle: true,
+      // You can hide controls if you want a cleaner look
+    }
   });
-  // ডিফল্ট কোয়ালিটি সেট করার অপশন (360p)
+  // Set default quality to 360p if quality levels are supported
   player.ready(function() {
     if (player.qualityLevels) {
       var levels = player.qualityLevels();
